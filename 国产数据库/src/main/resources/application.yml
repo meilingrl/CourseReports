@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kingbase-asset-manager
+  datasource:
+    driver-class-name: com.kingbase8.Driver
+    url: ${KINGBASE_URL:jdbc:kingbase8://localhost:54321/course_assets}
+    username: ${KINGBASE_USERNAME:system}
+    password: ${KINGBASE_PASSWORD:manager}
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+logging:
+  level:
+    cn.edu.training.kingbaseasset: INFO

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">资产表单</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="shell">
+    <aside class="rail">
+        <div class="brand">KES</div>
+        <div class="rail-title">国产数据库作业</div>
+        <nav>
+            <a class="nav-item active" th:href="@{/assets}">资产台账</a>
+        </nav>
+    </aside>
+
+    <section class="content narrow">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Asset Form</p>
+                <h1 th:text="${pageTitle}">新增教学设备</h1>
+            </div>
+            <a class="ghost" th:href="@{/assets}">返回列表</a>
+        </header>
+
+        <div class="notice danger" th:if="${errors}">
+            <p th:each="error : ${errors}" th:text="${error}"></p>
+        </div>
+
+        <form class="asset-form" method="post" th:action="${formAction}" th:object="${assetForm}">
+            <div class="form-grid">
+                <label>
+                    资产编号
+                    <input type="text" th:field="*{assetCode}" placeholder="例如 ASSET-2026-003" required>
+                </label>
+                <label>
+                    资产名称
+                    <input type="text" th:field="*{assetName}" placeholder="请输入设备名称" required>
+                </label>
+                <label>
+                    设备分类
+                    <select th:field="*{categoryId}" required>
+                        <option value="">请选择分类</option>
+                        <option th:each="category : ${categories}" th:value="${category.id()}" th:text="${category.name()}"></option>
+                    </select>
+                </label>
+                <label>
+                    使用部门
+                    <select th:field="*{departmentId}" required>
+                        <option value="">请选择部门</option>
+                        <option th:each="department : ${departments}" th:value="${department.id()}" th:text="${department.name()}"></option>
+                    </select>
+                </label>
+                <label>
+                    供应商
+                    <select th:field="*{supplierId}" required>
+                        <option value="">请选择供应商</option>
+                        <option th:each="supplier : ${suppliers}" th:value="${supplier.id()}" th:text="${supplier.name()}"></option>
+                    </select>
+                </label>
+                <label>
+                    状态
+                    <select th:field="*{status}" required>
+                        <option th:each="statusItem : ${statuses}" th:value="${statusItem.value()}" th:text="${statusItem.label()}"></option>
+                    </select>
+                </label>
+                <label>
+                    购置日期
+                    <input type="date" th:field="*{purchaseDate}">
+                </label>
+                <label>
+                    原值
+                    <input type="number" step="0.01" min="0" th:field="*{originalValue}" placeholder="0.00">
+                </label>
+                <label>
+                    保管人
+                    <input type="text" th:field="*{keeper}" placeholder="请输入保管人">
+                </label>
+                <label class="span-2">
+                    备注
+                    <textarea rows="4" th:field="*{remark}" placeholder="记录设备用途、维护情况等"></textarea>
+                </label>
+            </div>
+            <div class="form-actions">
+                <button class="primary" type="submit" th:text="${submitText}">保存资产</button>
+                <a class="ghost" th:href="@{/assets}">取消</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>

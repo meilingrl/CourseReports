@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教学设备资产管理</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="shell">
+    <aside class="rail">
+        <div class="brand">KES</div>
+        <div class="rail-title">国产数据库作业</div>
+        <nav>
+            <a class="nav-item active" th:href="@{/assets}">资产台账</a>
+        </nav>
+    </aside>
+
+    <section class="content">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">KingbaseES Web CRUD</p>
+                <h1>教学设备资产管理</h1>
+            </div>
+            <a class="primary" th:href="@{/assets/new}">新增资产</a>
+        </header>
+
+        <div class="notice success" th:if="${message}" th:text="${message}"></div>
+        <div class="notice danger" th:if="${error}" th:text="${error}"></div>
+
+        <form class="filters" method="get" th:action="@{/assets}">
+            <label>
+                关键字
+                <input type="search" name="keyword" placeholder="编号、名称、部门、保管人" th:value="${keyword}">
+            </label>
+            <label>
+                分类
+                <select name="categoryId">
+                    <option value="">全部分类</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id()}"
+                            th:text="${category.name()}"
+                            th:selected="${selectedCategoryId != null and selectedCategoryId == category.id()}">
+                    </option>
+                </select>
+            </label>
+            <label>
+                状态
+                <select name="status">
+                    <option value="">全部状态</option>
+                    <option th:each="statusItem : ${statuses}"
+                            th:value="${statusItem.value()}"
+                            th:text="${statusItem.label()}"
+                            th:selected="${selectedStatus != null and selectedStatus == statusItem.value()}">
+                    </option>
+                </select>
+            </label>
+            <button type="submit">查询</button>
+            <a class="ghost" th:href="@{/assets}">重置</a>
+        </form>
+
+        <section class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>资产编号</th>
+                    <th>资产名称</th>
+                    <th>分类</th>
+                    <th>使用部门</th>
+                    <th>供应商</th>
+                    <th>原值</th>
+                    <th>状态</th>
+                    <th>保管人</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(assets)}">
+                    <td colspan="9" class="empty">暂无资产数据，请点击“新增资产”录入。</td>
+                </tr>
+                <tr th:each="asset : ${assets}">
+                    <td class="mono" th:text="${asset.assetCode}"></td>
+                    <td>
+                        <strong th:text="${asset.assetName}"></strong>
+                        <span class="muted" th:if="${asset.purchaseDate != null}" th:text="'购置：' + ${asset.purchaseDate}"></span>
+                    </td>
+                    <td th:text="${asset.categoryName}"></td>
+                    <td th:text="${asset.departmentName}"></td>
+                    <td th:text="${asset.supplierName}"></td>
+                    <td class="number" th:text="${asset.originalValue}"></td>
+                    <td><span class="status" th:classappend="${asset.status}" th:text="${asset.statusLabel}"></span></td>
+                    <td th:text="${asset.keeper}"></td>
+                    <td class="actions">
+                        <a th:href="@{/assets/{id}/edit(id=${asset.id})}">修改</a>
+                        <form method="post" th:action="@{/assets/{id}/delete(id=${asset.id})}"
+                              onsubmit="return confirm('确认删除这条资产记录吗？');">
+                            <button class="link-danger" type="submit">删除</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+</main>
+</body>
+</html>
